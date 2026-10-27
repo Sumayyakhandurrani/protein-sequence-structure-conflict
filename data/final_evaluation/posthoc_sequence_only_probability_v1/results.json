@@ -1,0 +1,51 @@
+{
+  "analysis_classification": "post_hoc_exploratory",
+  "test_used_for_model_fitting": false,
+  "cal_proteins": 2369,
+  "paired_test_proteins": 4731,
+  "labels": 494,
+  "endpoint": "abs(p_structure-y)>=0.5",
+  "ME_features": [
+    "p_sequence"
+  ],
+  "ME_model": "LogisticRegression(max_iter=2000, solver=lbfgs, sklearn defaults)",
+  "ME_coef": 5.8896916442928395,
+  "ME_intercept": -4.879216094595165,
+  "ME_iterations": 12,
+  "metrics": {
+    "MA": {
+      "ap": 0.33168476214437315,
+      "roc_auc": 0.9556314673724361
+    },
+    "MB": {
+      "ap": 0.4432987897763585,
+      "roc_auc": 0.9578329268139559
+    },
+    "MC": {
+      "ap": 0.4024362713139442,
+      "roc_auc": 0.8862247969144044
+    },
+    "MD": {
+      "ap": 0.4452442784481795,
+      "roc_auc": 0.9528253027076466
+    },
+    "ME": {
+      "ap": 0.36322475861156106,
+      "roc_auc": 0.9505812400658922
+    }
+  },
+  "subtypes": {
+    "structure_false_positive_type": 3899,
+    "structure_missed_positive_type": 31207,
+    "total_failures": 35106,
+    "failure_prevalence": 0.015021090113704338,
+    "positive_annotation_prevalence": 0.016204173181111406
+  },
+  "comparisons_ap": {
+    "MB_minus_ME": 0.08007403116479744,
+    "MC_minus_ME": 0.039211512702383156,
+    "MD_minus_ME": 0.08201951983661843
+  },
+  "existing_prediction_file_sha256": "d0d8490fb474ae3140da4c4c909d82858702c45ca01e22f4118f8aa7e07c0a00",
+  "source_script_sha256": "58c617fbe0d57409de2891f45b063304d9499a8b994059a694a84b7cc41f4488"
+}

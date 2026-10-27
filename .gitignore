@@ -1,0 +1,43 @@
+.env
+.env.*
+!.env.example
+*.pt
+*.pth
+*.ckpt
+*.pkl
+*.pickle
+*.npy
+*.npz
+*.parquet
+*.h5
+*.hdf5
+*.sqlite
+*.db
+*.zip
+*.tar
+*.gz
+*.pem
+*.key
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+wandb/
+checkpoints/
+models/
+raw/
+.DS_Store
+# Manuscript drafts and editorial development files
+/data/manuscript/manuscript_v1/
+# Local publication audit reports
+/publication_safety_audit.json
+/publication_file_inventory.txt
+/publication_structure.txt
+/publication_pre_git_audit.zip
+
+# Temporary local Git and publication audit files
+/git_staging_preview.txt
+/git_publication_inventory.txt
+/git_precommit_audit.txt
+/git_precommit_audit.zip
+/git_final_precommit_audit.zip

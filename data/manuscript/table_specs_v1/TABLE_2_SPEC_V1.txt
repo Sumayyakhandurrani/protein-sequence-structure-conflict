@@ -1,0 +1,397 @@
+TABLE 2 SPECIFICATION — CONFLICT RELIABILITY, ARBITRATION, AND CONTROLS
+=====================================================================
+
+STATUS
+------
+FROZEN MANUSCRIPT TABLE SPECIFICATION
+
+
+TABLE PURPOSE
+-------------
+Summarize the principal evidence that sequence–structure disagreement
+contains reliability information beyond expert uncertainty, together
+with conflict-aware arbitration, a high-confidence conflict
+characterization, a randomized-conflict negative control, and targeted
+structure-backbone sensitivity.
+
+The table must preserve the distinction between:
+1. the frozen primary Bernoulli Jensen-Shannon conflict analyses; and
+2. the earlier E11 absolute-disagreement negative-control analysis.
+
+
+PRIMARY EVALUATION POPULATION
+-----------------------------
+Frozen Graph-V2 TEST:
+- Total TEST proteins: 4,754
+- Paired structure-eligible TEST proteins: 4,731
+- Structure-ineligible exclusions: 23
+- Frozen GO-MF labels: 494
+
+Unless explicitly marked otherwise, primary final TEST analyses use the
+4,731 paired structure-eligible proteins and all 494 frozen labels.
+
+
+SECTION A — PRIMARY STRUCTURE-FAILURE RELIABILITY
+-------------------------------------------------
+Purpose:
+Test whether frozen Bernoulli Jensen-Shannon conflict adds information
+for identifying structure-expert failures beyond both experts'
+uncertainty.
+
+Failure endpoint:
+|p_structure - y| >= 0.5
+
+MA features:
+- structure uncertainty
+- sequence uncertainty
+
+MB features:
+- structure uncertainty
+- sequence uncertainty
+- Bernoulli Jensen-Shannon conflict
+
+Conflict:
+Per-label Bernoulli Jensen-Shannon divergence using natural logarithms.
+
+Binary reliability model:
+LogisticRegression(
+    C=1,
+    solver="lbfgs",
+    max_iter=1000,
+    random_state=42
+)
+
+Frozen TEST:
+- MA AP: 0.331684762
+- MB AP: 0.443298790
+
+Primary incremental endpoint:
+- MB minus MA AP: +0.111614032
+- 95% whole-protein bootstrap CI:
+  [+0.101829521, +0.121519001]
+- Bootstrap replicates: 1,000
+- Improvement fraction: 1.0
+
+Interpretation:
+Conflict provides substantial incremental information for identifying
+structure-expert failures beyond both experts' uncertainty.
+
+
+SECTION B — CONFLICT-AWARE ARBITRATION
+--------------------------------------
+A0:
+Sequence expert alone.
+
+A1:
+Uncertainty-only soft arbitration using sequence and structure
+uncertainty.
+
+A2:
+Conflict-aware soft arbitration using sequence uncertainty, structure
+uncertainty, and frozen Bernoulli Jensen-Shannon conflict.
+
+Gate target:
+1 when structure absolute prediction error is smaller than sequence
+absolute prediction error; 0 otherwise.
+
+Gate:
+Logistic regression fitted on CAL only.
+
+Soft arbitration:
+p_arb = (1-g)*p_sequence + g*p_structure
+
+Primary comparison:
+A2 versus A1.
+
+Frozen TEST:
+
+A1:
+- Micro AP: 0.506345931
+- Macro AP: 0.301689621
+
+A2:
+- Micro AP: 0.541130225
+- Macro AP: 0.347116154
+
+A2 minus A1:
+- Micro AP: +0.034784218
+  95% CI [+0.030782278, +0.038603761]
+
+- Macro AP: +0.045425730
+  95% CI [+0.035623289, +0.050450715]
+
+Bootstrap:
+- 1,000 paired whole-protein replicates
+- Improvement fraction: 1.0 for both AP endpoints
+
+Important reference:
+A0 sequence expert:
+- Micro AP: 0.579878361
+- Macro AP: 0.406981793
+
+Therefore A2 improves over A1 but does NOT outperform the stronger
+sequence-only A0 expert in micro or macro AP.
+
+Supported claim:
+Conflict provides incremental arbitration utility beyond uncertainty.
+
+Unsupported claim:
+Conflict-aware arbitration universally improves prediction over the
+stronger sequence expert.
+
+
+SECTION C — HIGH-CONFIDENCE CONFLICT
+------------------------------------
+Primary definition:
+
+(p_sequence >= 0.80 AND p_structure <= 0.20)
+
+OR
+
+(p_sequence <= 0.20 AND p_structure >= 0.80)
+
+Membership uses predictions only; ground truth is not used to define
+the subset.
+
+Frozen TEST:
+- High-confidence conflict pairs: 3,623
+- Fraction of all paired protein-label pairs: 0.155020%
+- Sequence YES / Structure NO: 3,318
+- Sequence NO / Structure YES: 305
+- Sequence closer to ground truth: 0.832183
+- Structure closer to ground truth: 0.167817
+- Mean Bernoulli JS: 0.414151
+
+Interpretation:
+High-confidence conflict defines a small subset with strongly opposing
+expert predictions. Sequence is closer for the majority, but structure
+is closer for a non-trivial minority.
+
+Do NOT state that sequence is always correct in high-confidence
+conflicts.
+
+
+SECTION D — RANDOMIZED-CONFLICT NEGATIVE CONTROL
+------------------------------------------------
+IMPORTANT:
+This E11 experiment belongs to the earlier development-stage reliability
+ablation and uses ABSOLUTE PROBABILITY DISAGREEMENT:
+
+D = |p_sequence - p_structure|
+
+It must NOT be represented as a Bernoulli-JS experiment.
+
+Evaluation population:
+CAL-EVAL, not final TEST.
+
+Target:
+Structure-expert failure.
+
+MA:
+own uncertainty + other-expert uncertainty
+
+MB-random:
+own uncertainty + other-expert uncertainty +
+protein-shuffled absolute disagreement
+
+MB-real:
+own uncertainty + other-expert uncertainty +
+correctly paired absolute disagreement
+
+CAL-EVAL AP:
+- MA: 0.327029429
+- MB-random: 0.326240149
+- MB-real: 0.407858258
+
+Real minus random:
+- Delta AP: +0.081618109
+- 95% CI: [+0.0713045, +0.0926911]
+- 1,000 whole-protein bootstrap replicates
+- Fraction Delta > 0: 1.0
+
+Random minus MA:
+- Delta AP: -0.000789280
+- 95% CI: [-0.0010999, -0.0004865]
+
+Interpretation:
+Destroying protein-level correspondence removes the structure-reliability
+benefit. The result supports meaningful sequence–structure
+correspondence rather than benefit from merely adding another numerical
+feature with the same marginal disagreement distribution.
+
+This remains an association/reliability result and does not establish
+biological causality.
+
+
+SECTION E — ALTERNATIVE STRUCTURE-BACKBONE SENSITIVITY
+------------------------------------------------------
+Alternative model:
+structure_gcn_sensitivity_v1_full
+
+Architecture:
+GCN-style normalized-neighbor propagation.
+
+Input:
+21-dimensional residue identity.
+
+Hidden dimension:
+128
+
+Layers:
+2
+
+Pooling:
+global mean
+
+Outputs:
+494 GO-MF labels
+
+Trainable parameters:
+133,102
+
+No ESM-2 embeddings.
+No pLDDT model input.
+No raw XYZ coordinates as direct model input.
+
+Only the graph message-passing architecture is changed relative to the
+controlled structure-expert setup.
+
+Conflict:
+Frozen Bernoulli Jensen-Shannon divergence.
+
+Frozen TEST:
+
+MA:
+- AP: 0.3249998224
+
+MB:
+- AP: 0.4551375377
+
+MB minus MA:
+- AP: +0.1301377153
+
+Matched whole-protein bootstrap:
+- Observed Delta AP: +0.13013768
+- 95% CI: [+0.11938285, +0.13969006]
+- Replicates: 1,000
+- Fraction improved: 1.0
+
+Interpretation:
+The central conflict-as-structure-reliability result persists under one
+pre-specified alternative GCN-style structure backbone.
+
+This supports limited structure-backbone sensitivity only.
+
+It does NOT establish:
+- robustness across all GNN architectures;
+- robustness across protein-language-model backbones;
+- superiority of the alternative GCN.
+
+
+MANUSCRIPT-FACING TABLE ORGANIZATION
+------------------------------------
+Recommended table sections:
+
+1. Primary structure-failure reliability
+   - MA AP
+   - MB AP
+   - Delta AP
+   - 95% CI
+
+2. Conflict-aware arbitration
+   - A1 micro AP
+   - A2 micro AP
+   - Delta micro AP
+   - 95% CI
+   - A1 macro AP
+   - A2 macro AP
+   - Delta macro AP
+   - 95% CI
+
+3. High-confidence conflict
+   - pair count
+   - fraction of protein-label pairs
+   - sequence-closer fraction
+   - structure-closer fraction
+
+4. Randomized-conflict control
+   - MA AP
+   - MB-random AP
+   - MB-real AP
+   - real-minus-random Delta AP
+   - 95% CI
+
+5. Alternative GCN backbone
+   - MA AP
+   - MB AP
+   - Delta AP
+   - 95% CI
+
+
+REPORTING RULES
+---------------
+1. Use frozen values only.
+
+2. Preserve bootstrap confidence intervals exactly to the selected
+   manuscript precision.
+
+3. Clearly label whether an analysis is final TEST or CAL-EVAL.
+
+4. Clearly distinguish Bernoulli-JS conflict from E11 absolute
+   disagreement.
+
+5. Do not claim conflict universally improves GO-MF prediction.
+
+6. Do not claim A2 outperforms the sequence-only A0 expert.
+
+7. Do not claim equal reliability benefit for sequence and structure
+   experts.
+
+8. Do not state that sequence is always correct in high-confidence
+   conflict cases.
+
+9. Do not interpret the randomized-conflict result as biological
+   causality.
+
+10. Do not describe the E12 result as robustness across all GNNs or
+    protein-language-model backbones.
+
+11. Do not describe the alternative GCN as superior to the primary
+    structure expert.
+
+12. Keep reliability/error-analysis claims separate from general
+    predictive-performance claims.
+
+
+AUTHORITATIVE SOURCES
+---------------------
+Primary reliability:
+data/final_evaluation/final_test_primary_v1/
+bootstrap/reliability_bootstrap_summary.csv
+
+Primary final TEST metrics:
+data/final_evaluation/final_test_primary_v1/primary_results.json
+
+Arbitration bootstrap:
+data/final_evaluation/final_test_primary_v1/
+bootstrap/arbitration_bootstrap_summary.csv
+
+E3:
+data/manuscript/experiment_ledger_v1/E3_conflict_arbitration.txt
+
+E4:
+data/manuscript/experiment_ledger_v1/E4_high_confidence_conflict.txt
+
+E11:
+data/manuscript/experiment_ledger_v1/E11_ablation.txt
+
+E12:
+data/manuscript/experiment_ledger_v1/E12_efficiency_backbone_sensitivity.txt
+
+Alternative GCN final TEST:
+data/analysis/backbone_sensitivity_v1/final_test_v1/
+reliability_summary.json
+
+Alternative GCN bootstrap:
+data/analysis/backbone_sensitivity_v1/final_test_v1/
+bootstrap/bootstrap_summary.json

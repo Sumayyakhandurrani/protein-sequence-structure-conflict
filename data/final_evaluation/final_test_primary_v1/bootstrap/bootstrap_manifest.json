@@ -1,0 +1,15 @@
+{
+  "analysis": "final_test_bootstrap_v1",
+  "evaluation_population": "4,731 paired structure-eligible frozen Graph-V2 TEST proteins",
+  "bootstrap_replicates": 1000,
+  "seed": 42,
+  "resampling_unit": "whole protein",
+  "all_494_labels_kept_together": true,
+  "models_refitted_per_bootstrap": false,
+  "primary_reliability": "MB minus MA",
+  "primary_reliability_metric": "average precision",
+  "primary_arbitration": "A2 minus A1",
+  "interval": "percentile 95%",
+  "interpretation": "Bootstrap intervals quantify TEST sampling uncertainty conditional on the frozen CAL-fitted models.",
+  "test_used_for_tuning": false
+}

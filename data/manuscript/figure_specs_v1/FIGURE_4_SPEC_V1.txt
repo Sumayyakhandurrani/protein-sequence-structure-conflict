@@ -1,0 +1,440 @@
+FIGURE_4_SPEC_V1
+================
+
+TITLE
+-----
+Conflict reliability persists across GO-frequency strata and an alternative structure backbone
+
+
+PURPOSE
+-------
+Figure 4 tests two complementary robustness questions for the central
+structure-expert reliability result:
+
+1. Does the incremental reliability information from sequence-structure
+   conflict persist across GO Molecular Function labels with different
+   TRAIN-set support?
+
+2. Does the central structure-failure reliability result persist when the
+   primary structure GNN is replaced by an alternative GCN-style structure
+   backbone?
+
+The figure is a robustness/sensitivity analysis.
+
+It must NOT be interpreted as:
+- evidence that increasing GO-term frequency causally increases the usefulness
+  of conflict;
+- evidence that the alternative GCN is superior to the primary structure GNN;
+- evidence of robustness across all GNN architectures;
+- evidence of robustness across multiple protein language models;
+- evaluation of unseen or extremely rare GO terms below TRAIN support 75.
+
+
+======================================================================
+PANEL A — GO-FREQUENCY ROBUSTNESS
+======================================================================
+
+PANEL TITLE
+-----------
+A  Conflict reliability across GO-frequency strata
+
+
+SCIENTIFIC QUESTION
+-------------------
+Does sequence-structure conflict provide incremental information for predicting
+structure-expert failures across GO-MF labels with different TRAIN-set support?
+
+
+AUTHORITATIVE SOURCE
+--------------------
+data/final_evaluation/final_test_go_frequency_v1/go_frequency_test_summary.csv
+
+
+IMPORTANT SOURCE EXCLUSION
+--------------------------
+Do NOT use:
+
+data/conflict/go_frequency_reliability_v1/go_frequency_reliability_summary.json
+
+for the main manuscript panel.
+
+That earlier analysis used "absolute_disagreement" as the MB conflict feature.
+The FINAL TEST summary above is the authoritative manuscript source.
+
+
+EVALUATION SET
+--------------
+Frozen Graph-V2 FINAL TEST.
+
+Paired structure-eligible TEST proteins:
+n = 4,731
+
+Primary GO-MF vocabulary:
+494 labels
+
+The vocabulary already required TRAIN support >=75.
+
+
+METRIC
+------
+Incremental average precision for predicting structure-expert failure:
+
+Delta AP = AP(MB) - AP(MA)
+
+where:
+
+MA:
+    U_structure
+    U_sequence
+
+MB:
+    U_structure
+    U_sequence
+    Bernoulli_JS conflict
+
+Positive Delta AP means that adding sequence-structure conflict improves
+structure-failure reliability discrimination beyond expert uncertainty alone.
+
+
+DATA TO PLOT
+------------
+
+TRAIN support band: 75-99
+n_labels = 85
+Delta AP = 0.02722455427151199
+95% CI = [0.017146081640528395, 0.03831073892073491]
+
+TRAIN support band: 100-249
+n_labels = 207
+Delta AP = 0.0635857285663411
+95% CI = [0.05024883019722818, 0.07760320007907713]
+
+TRAIN support band: 250-499
+n_labels = 77
+Delta AP = 0.085308408684029
+95% CI = [0.06797852218078189, 0.10258520109082679]
+
+TRAIN support band: 500-999
+n_labels = 68
+Delta AP = 0.09026186466239061
+95% CI = [0.0783664010398658, 0.10329747641761024]
+
+TRAIN support band: >=1000
+n_labels = 57
+Delta AP = 0.12419236079039325
+95% CI = [0.1138164608225685, 0.13437698588188488]
+
+
+BOOTSTRAP
+---------
+All AP bootstrap improvement fractions = 1.0.
+
+
+PLOT DESIGN
+-----------
+Use a point-and-error-bar plot.
+
+x-axis:
+TRAIN GO-MF support band
+
+Order:
+75-99
+100-249
+250-499
+500-999
+>=1000
+
+Show n_labels directly beneath or within each x-axis label:
+
+75-99
+n=85
+
+100-249
+n=207
+
+250-499
+n=77
+
+500-999
+n=68
+
+>=1000
+n=57
+
+y-axis:
+Incremental AP (MB - MA)
+
+Show 95% bootstrap confidence intervals as vertical error bars.
+
+Include a horizontal reference line at:
+
+Delta AP = 0
+
+Do not connect points with a line if doing so visually implies a continuous
+dose-response or causal trend.
+
+The five support bands are categorical strata.
+
+
+SAFE INTERPRETATION
+-------------------
+Conflict remains positively informative for structure-expert failure across all
+evaluated TRAIN-support bands, including the lowest included 75-99 band.
+
+The magnitude differs across support bands, but this should NOT be interpreted
+causally because the bands also differ in failure prevalence, label composition,
+and other properties.
+
+
+======================================================================
+PANEL B — STRUCTURE-BACKBONE SENSITIVITY
+======================================================================
+
+PANEL TITLE
+-----------
+B  Structure-backbone sensitivity
+
+
+SCIENTIFIC QUESTION
+-------------------
+Does the central structure-side conflict-reliability result persist under an
+alternative reasonable structure GNN backbone?
+
+
+AUTHORITATIVE ALTERNATIVE-GCN SOURCES
+-------------------------------------
+Reliability:
+
+data/analysis/backbone_sensitivity_v1/final_test_v1/reliability_summary.json
+
+Bootstrap:
+
+data/analysis/backbone_sensitivity_v1/final_test_v1/bootstrap/bootstrap_summary.json
+
+
+ALTERNATIVE BACKBONE
+--------------------
+GCN-style normalized-neighbor propagation
+
+Architecture:
+21 -> 128
+2 graph layers
+dropout = 0.10
+global mean pooling
+494 outputs
+
+Parameters:
+133,102
+
+This is a targeted structure-backbone sensitivity analysis only.
+
+
+ALTERNATIVE GCN — FINAL TEST
+----------------------------
+Evaluation proteins:
+4,731
+
+Labels:
+494
+
+Conflict definition:
+per-label Bernoulli Jensen-Shannon divergence using natural logarithms
+
+Uncertainty:
+U(p) = 1 - 2|p - 0.5|
+
+MA AP:
+0.3249998224213483
+
+MB AP:
+0.4551375376887142
+
+Delta AP:
+0.1301377152673659
+
+Bootstrap observed Delta AP:
+0.1301376841120538
+
+95% bootstrap CI:
+[0.1193828469359285, 0.1396900619807918]
+
+Bootstrap replicates:
+1,000
+
+Bootstrap resampling unit:
+whole protein
+
+
+PRIMARY STRUCTURE GNN — FINAL TEST COMPARATOR
+---------------------------------------------
+Primary structure model:
+
+hidden = 128
+2 graph layers
+global mean pooling
+classifier -> 494
+
+Parameters:
+298,990
+
+Primary FINAL TEST structure-failure reliability:
+
+MA AP:
+0.331684762
+
+MB AP:
+0.443298790
+
+Delta AP:
+0.11161403
+
+95% bootstrap CI:
+[0.10182952, 0.12151900]
+
+
+PLOT DESIGN
+-----------
+Use a two-category point-and-error-bar comparison.
+
+Categories:
+
+Primary GNN
+Alternative GCN
+
+y-axis:
+Incremental AP (MB - MA)
+
+Primary GNN:
+Delta AP = 0.11161403
+95% CI = [0.10182952, 0.12151900]
+
+Alternative GCN:
+Delta AP = 0.1301376841120538
+95% CI = [0.1193828469359285, 0.1396900619807918]
+
+Include a horizontal reference line at:
+
+Delta AP = 0
+
+Use the same y-axis concept and compatible visual language as Panel A.
+
+Do NOT add significance markers comparing the two architectures.
+
+Do NOT label either architecture as better or worse.
+
+
+SAFE INTERPRETATION
+-------------------
+The positive incremental structure-failure reliability signal persists when the
+primary structure GNN is replaced with an alternative GCN-style backbone.
+
+The purpose of this comparison is persistence/robustness, not architecture
+ranking.
+
+The numerical difference between the two Delta AP estimates must not be
+presented as evidence that the alternative GCN is superior.
+
+
+======================================================================
+OVERALL FIGURE DESIGN
+======================================================================
+
+LAYOUT
+------
+Two-panel horizontal layout:
+
+A | B
+
+Panel A should receive more horizontal space because it contains five
+GO-frequency strata.
+
+Suggested width ratio:
+approximately 1.6 : 1
+
+
+VISUAL STYLE
+------------
+Match the visual style of frozen Figures 2 and 3 as closely as practical.
+
+Requirements:
+- publication-quality;
+- clean white background;
+- readable at manuscript scale;
+- restrained visual design;
+- consistent fonts;
+- clear panel labels A and B;
+- no unnecessary decorative elements;
+- no 3D effects;
+- no gradients;
+- no excessive gridlines;
+- confidence intervals clearly visible;
+- zero reference line visually distinguishable but not dominant.
+
+
+MAIN FIGURE MESSAGE
+-------------------
+The central structure-side conflict-reliability result is not confined to a
+single GO-frequency stratum or to the primary structure GNN backbone.
+
+
+CLAIMS ALLOWED
+--------------
+1. Conflict provides positive incremental structure-failure reliability
+   information across all evaluated TRAIN-support bands.
+
+2. The effect is present even in the lowest included support band, 75-99.
+
+3. The positive structure-side reliability effect persists under the
+   alternative GCN-style backbone.
+
+4. These analyses strengthen the robustness of the central structure-side
+   reliability finding.
+
+
+CLAIMS NOT ALLOWED
+------------------
+1. Increasing GO frequency causes conflict to become more useful.
+
+2. Conflict was tested on unseen or extremely rare labels below support 75.
+
+3. Alternative GCN is superior to the primary GNN.
+
+4. The result is robust across all GNN architectures.
+
+5. The result is robust across multiple PLM backbones.
+
+6. Conflict universally improves GO-MF prediction.
+
+7. The backbone comparison is a formal architecture benchmark.
+
+
+OUTPUT FILES
+------------
+data/manuscript/figures_v1/Figure_4_frequency_backbone_robustness.png
+
+data/manuscript/figures_v1/Figure_4_frequency_backbone_robustness.pdf
+
+data/manuscript/figures_v1/Figure_4_frequency_backbone_robustness.svg
+
+
+PLOTTING SCRIPT
+---------------
+data/manuscript/figure_scripts_v1/make_figure4.py
+
+
+FREEZE RULE
+-----------
+Do not freeze Figure 4 immediately after generation.
+
+Required sequence:
+
+1. Save this specification.
+2. Record its SHA256.
+3. Create plotting script that reads the frozen source artifacts directly.
+4. Generate PNG/PDF/SVG.
+5. Visually inspect the PNG.
+6. Check plotted numerical values against the frozen artifacts.
+7. Make only presentation corrections if necessary.
+8. Regenerate.
+9. Record final SHA256 values for specification, script, PNG, PDF, and SVG.
+10. Mark Figure 4 frozen only after visual and numerical verification.

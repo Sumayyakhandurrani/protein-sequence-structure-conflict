@@ -1,0 +1,2 @@
+n_proteins,n_protein_label_targets,mean_protein_enrichment,median_protein_enrichment,fraction_proteins_positive,bootstrap_replicates,bootstrap_seed,mean_enrichment_ci95_low,mean_enrichment_ci95_high
+2447,23087,0.0437242691401686,0.026446013762324583,0.663261136085002,1000,42,0.03996045894773479,0.04774202808205543

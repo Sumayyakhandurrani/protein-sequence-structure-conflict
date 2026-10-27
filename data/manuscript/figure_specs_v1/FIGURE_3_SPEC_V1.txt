@@ -1,0 +1,296 @@
+FIGURE 3 — ROBUSTNESS AND MODALITY ASYMMETRY
+=============================================
+
+PURPOSE
+-------
+Test whether the incremental reliability information carried by
+sequence–structure conflict persists across low-homology regimes and
+under controlled modality degradation, while showing that the effect
+is asymmetric between the structure and sequence experts.
+
+All panels use frozen existing outputs.
+No models are retrained during figure generation.
+
+
+PANEL A — LOW-HOMOLOGY ROBUSTNESS
+=================================
+
+Population:
+Frozen paired FINAL TEST proteins.
+
+Endpoint:
+Structure-expert failure prediction.
+
+Statistic:
+Delta AP = AP(MB) - AP(MA)
+
+MA:
+Frozen uncertainty-only reliability model.
+
+MB:
+MA + frozen Bernoulli-JS conflict.
+
+Strata:
+
+No qualifying TRAIN hit
+n = 4,194
+Delta AP = +0.111423136
+95% CI = [+0.100871242, +0.121924135]
+
+<20% identity
+n = 151
+Delta AP = +0.163638518
+95% CI = [+0.104759189, +0.222993918]
+
+20–25% identity
+n = 248
+Delta AP = +0.080405227
+95% CI = [+0.049387401, +0.118438904]
+
+25–30% identity
+n = 130
+Delta AP = +0.099559637
+95% CI = [+0.050477405, +0.150505482]
+
+>=30% identity
+n = 8
+Observed Delta AP = +0.185478594
+
+IMPORTANT:
+The >=30% stratum is descriptive only because n=8.
+Do not show an inferential CI for this stratum.
+
+"No qualifying hit" means no qualifying hit detected under the
+specified MMseqs2 search configuration. It does not mean zero
+evolutionary homology.
+
+The later E5 search detected 11 qualifying >=30% TEST-to-TRAIN pairs
+involving 8 TEST proteins. The frozen benchmark was retained.
+
+Recommended visual:
+Point-and-whisker plot with a zero reference line.
+Use open/different marker for the >=30% descriptive n=8 stratum.
+
+Source:
+data/manuscript/experiment_ledger_v1/E5_low_homology.txt
+
+
+PANEL B — TARGETED EXPERT DEGRADATION
+=====================================
+
+Purpose:
+Demonstrate that the perturbations actually degrade the targeted
+expert before interpreting reliability behavior.
+
+STRUCTURE EXPERT — coordinate noise
+Evaluation population:
+CAL-EVAL, 2,373 proteins.
+
+Noise sigma (Angstrom) -> structure micro AUPRC
+
+clean:
+0.395399986
+
+0.5 A:
+0.393347196
+
+1.0 A:
+0.390739336
+
+2.0 A:
+0.355478868
+
+Delta micro AUPRC at 2.0 A vs clean:
+-0.039921118
+
+
+SEQUENCE EXPERT — residue masking
+Evaluation population:
+CAL-EVAL, 2,373 proteins.
+
+Masking -> sequence micro AUPRC
+
+clean:
+0.605243968
+
+10%:
+0.604404512
+
+20%:
+0.590418462
+
+40%:
+0.477860023
+
+Delta micro AUPRC at 40% vs clean:
+-0.127383945
+
+IMPORTANT:
+The x-axes represent different perturbation units and severities.
+Do not imply that 0.5 A coordinate noise is quantitatively equivalent
+to 10% sequence masking.
+
+Recommended visual:
+Two compact trajectories within Panel B, or normalized categorical
+condition positions with explicit modality-specific labels.
+
+Sources:
+data/robustness/structural_degradation_v1/analysis/
+structural_degradation_summary.json
+
+data/robustness/sequence_degradation_v1/analysis/
+sequence_degradation_summary.json
+
+
+PANEL C — STRUCTURE-SIDE RELIABILITY UNDER DEGRADATION
+======================================================
+
+Evaluation population:
+CAL-EVAL, 2,373 proteins.
+
+Endpoint:
+Structure-expert failure.
+
+Conflict:
+Bernoulli Jensen-Shannon divergence, natural log.
+
+Statistic:
+Delta AP = AP(MB) - AP(MA)
+
+Coordinate-noise condition -> Delta AP
+
+clean:
++0.103546398
+
+sigma 0.5 A:
++0.101004354
+
+sigma 1.0 A:
++0.105446236
+
+sigma 2.0 A:
++0.122879489
+
+IMPORTANT:
+No E6 bootstrap CI artifact exists.
+Show point estimates only.
+Do not fabricate or infer confidence intervals.
+
+Interpretation:
+The structure-side incremental reliability signal remains positive
+across all tested coordinate-noise conditions.
+
+Do NOT claim monotonic conflict behavior.
+Mean Bernoulli-JS itself was non-monotonic across perturbation levels.
+
+Source:
+data/robustness/structural_degradation_v1/analysis/
+structural_degradation_reliability.json
+
+
+PANEL D — SEQUENCE-SIDE RELIABILITY UNDER DEGRADATION
+=====================================================
+
+Evaluation population:
+CAL-EVAL, 2,373 proteins.
+
+Endpoint:
+Sequence-expert failure.
+
+Conflict:
+Bernoulli Jensen-Shannon divergence, natural log.
+
+Statistic:
+Delta AP = AP(MB) - AP(MA)
+
+clean:
+Delta AP = +0.000339289
+95% CI = [-0.001341853, +0.002133435]
+
+10% masking:
+Delta AP = -0.001729815
+95% CI = [-0.003427662, -0.000071188]
+
+20% masking:
+Delta AP = -0.003445667
+95% CI = [-0.004962572, -0.002007628]
+
+40% masking:
+Delta AP = +0.000845053
+95% CI = [-0.000610836, +0.002172625]
+
+Bootstrap:
+1,000 whole-protein replicates.
+Seed = 42.
+Models were not refitted under masked conditions.
+
+Recommended visual:
+Point-and-whisker plot with a horizontal zero line.
+
+Interpretation:
+Unlike the structure expert, conflict contributes little or
+inconsistent incremental AP for predicting sequence-expert failure.
+
+Sources:
+data/robustness/sequence_degradation_v1/
+reliability_analysis/reliability_summary.json
+
+data/robustness/sequence_degradation_v1/
+reliability_analysis/bootstrap/bootstrap_summary.json
+
+
+====================================================
+FIGURE-WIDE INTERPRETATION
+====================================================
+
+1. The structure-side conflict reliability signal persists across
+   adequately populated low-homology TEST strata.
+
+2. Controlled perturbations measurably degrade the targeted experts.
+
+3. Conflict remains strongly informative for structure-expert failure
+   under coordinate degradation.
+
+4. The corresponding incremental AP for sequence-expert failure is
+   near zero or negative under sequence masking.
+
+5. Therefore the reliability value of sequence–structure conflict is
+   modality-asymmetric rather than universally symmetric.
+
+
+====================================================
+CLAIMS NOT TO MAKE
+====================================================
+
+- Do not claim conflict universally improves protein-function prediction.
+- Do not claim conflict improves both experts equally.
+- Do not claim monotonic conflict increase with perturbation severity.
+- Do not claim causal effects of sequence identity.
+- Do not describe "no qualifying hit" as absence of homology.
+- Do not claim a perfect >=30% cross-split homology guarantee.
+- Do not use the n=8 >=30% stratum for strong inference.
+- Do not invent E6 confidence intervals.
+- Do not imply CAL-EVAL perturbation results are FINAL TEST results.
+
+
+====================================================
+VISUAL RULES
+====================================================
+
+1. Four panels labeled A, B, C, D.
+2. Publication-ready landscape layout.
+3. Use point/line plots rather than large bars where practical.
+4. Include horizontal zero lines for Delta AP panels.
+5. Show bootstrap 95% CIs only where available.
+6. Clearly distinguish descriptive n=8 E5 point.
+7. Clearly label TEST versus CAL-EVAL populations.
+8. Do not use significance stars.
+9. Preserve negative/null E7 results visibly.
+10. Generate high-resolution PNG and vector PDF/SVG.
+11. Figure-generation code must read frozen artifacts where available
+    and must not alter experimental outputs.
+
+
+STATUS
+======
+FIGURE 3 SCIENTIFIC SPECIFICATION V1

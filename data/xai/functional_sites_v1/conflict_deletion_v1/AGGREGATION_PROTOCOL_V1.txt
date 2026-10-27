@@ -1,0 +1,138 @@
+E10 CONFLICT-DELETION AGGREGATION PROTOCOL V1
+==============================================
+
+STATUS
+------
+FROZEN BEFORE INSPECTION OF AGGREGATED SCIENTIFIC OUTCOMES.
+
+INPUT POPULATION
+----------------
+Use exactly the 2447 frozen per-protein conflict-deletion V1 outputs.
+
+Expected total positive protein-label targets: 23087.
+
+Frozen production manifest:
+data/xai/functional_sites_v1/conflict_deletion_v1/PER_PROTEIN_SHA256.txt
+
+Frozen production manifest SHA256:
+47df91321507008bbec4957c73e082deb8d04278b27a590169dff101cf784416
+
+PRIMARY LABEL-LEVEL QUANTITY
+----------------------------
+For each protein i and true-positive GO-MF label j:
+
+E_ij =
+    top_conflict_reduction_ij
+    -
+    random_mean_conflict_reduction_ij
+
+Use the already stored field:
+conflict_deletion_enrichment
+
+No recomputation or alternative conflict/deletion definition is permitted.
+
+Interpretation:
+E_ij > 0 means deletion of the prespecified top conflict-driver
+residues reduced frozen sequence-structure conflict more than the
+mean reduction from matched random deletion sets.
+
+PROTEIN-LEVEL AGGREGATION
+-------------------------
+For each protein:
+
+E_i = arithmetic mean of E_ij across all eligible true-positive
+GO-MF labels for that protein.
+
+Each protein receives equal weight in the final analysis regardless
+of number of positive labels.
+
+PRIMARY POPULATION SUMMARY
+--------------------------
+Across the 2447 protein-level E_i values report:
+
+1. number of proteins
+2. total number of protein-label targets
+3. arithmetic mean E_i
+4. median E_i
+5. fraction of proteins with E_i > 0
+
+PRIMARY UNCERTAINTY INTERVAL
+----------------------------
+Compute a 95% whole-protein bootstrap confidence interval for the
+mean protein-level enrichment.
+
+Bootstrap unit:
+protein.
+
+Number of bootstrap replicates:
+1000.
+
+Sampling:
+sample 2447 proteins with replacement for each replicate.
+
+Statistic:
+arithmetic mean of sampled protein-level E_i values.
+
+Confidence interval:
+2.5th and 97.5th percentiles of the 1000 bootstrap means.
+
+Bootstrap seed:
+42.
+
+The bootstrap is performed on protein-level values, NOT individual
+protein-label rows.
+
+OUTPUT TABLES
+-------------
+Create:
+
+1. conflict_deletion_label_level_v1.csv
+   One row per protein-label target.
+
+2. conflict_deletion_protein_level_v1.csv
+   One row per protein with mean enrichment across its labels.
+
+3. conflict_deletion_summary_v1.csv
+   Prespecified primary population summary.
+
+4. AGGREGATION_RUN_INFO_V1.txt
+   Input/output counts, frozen manifest SHA, protocol SHA,
+   implementation SHA, bootstrap settings, and validation status.
+
+VALIDATION
+----------
+Before reporting scientific results verify:
+
+- exactly 2447 proteins
+- exactly 23087 protein-label targets
+- all expected frozen protein IDs represented exactly once
+- all enrichment values finite
+- stored enrichment agrees numerically with:
+  top_conflict_reduction - random_mean_conflict_reduction
+- no unexpected duplicate protein-label rows
+- bootstrap has exactly 1000 replicates
+- no frozen production file is modified
+
+INTERPRETATION BOUNDARY
+-----------------------
+This is a model-behavior / explanation-faithfulness analysis.
+
+A positive result supports the claim that residues ranked as
+conflict drivers by the prespecified single-residue counterfactual
+criterion generalize to simultaneous top-k perturbation better than
+matched random deletion with respect to reducing model disagreement.
+
+It does NOT establish:
+- biological causality,
+- that the selected residues are physically removable,
+- that reducing conflict improves prediction accuracy,
+- that either expert is correct,
+- that sequence and structure experts are statistically independent.
+
+Negative and null outcomes must be retained.
+
+No alternative deletion budget, ranking definition, conflict metric,
+random baseline, protein weighting, bootstrap unit, or threshold may
+be selected after inspecting the result.
+
+No TEST outcome is used to modify this protocol after freezing.

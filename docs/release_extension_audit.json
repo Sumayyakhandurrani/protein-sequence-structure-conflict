@@ -1,0 +1,28 @@
+{
+  "copied": [
+    "data/splits/mmseqs30_graph_v2/primary_go_mf_label_ids.txt",
+    "data/splits/mmseqs30_graph_v2/primary_go_mf_labels.csv",
+    "data/splits/mmseqs30_graph_v2/labels/primary_label_map.csv",
+    "data/splits/mmseqs30_graph_v2/labels/label_metadata.json",
+    "data/splits/mmseqs30_graph_v2/calibration_v1/calibration_split_manifest.json",
+    "data/splits/mmseqs30_graph_v2/split_assignments.csv",
+    "data/splits/mmseqs30_graph_v2/component_split_assignments.csv",
+    "data/xai/functional_sites_v1/functional_sites_extraction_summary.txt",
+    "data/xai/functional_sites_v1/rank_analysis_v1/rank_analysis_summary.csv",
+    "data/xai/functional_sites_v1/conflict_focused_xai_v1/primary_associations.csv",
+    "data/xai/functional_sites_v1/explanation_stability_v1/stability_population_ids.txt",
+    "data/xai/functional_sites_v1/explanation_stability_v1/EXPLANATION_STABILITY_PROTOCOL_V1.txt",
+    "data/xai/functional_sites_v1/biological_enrichment_v1/primary_enrichment_summary.csv",
+    "data/xai/functional_sites_v1/explanation_stability_v1/aggregation_v1/stability_protein_level.csv",
+    "data/xai/functional_sites_v1/explanation_stability_v1/aggregation_v1/stability_summary.csv",
+    "data/xai/functional_sites_v1/explanation_stability_v1/aggregation_v1/stability_target_level.csv",
+    "data/xai/functional_sites_v1/deletion_faithfulness_v1/aggregate_v1/faithfulness_summary.csv"
+  ],
+  "skipped": [
+    [
+      "data/xai/functional_sites_v1/conflict_deletion_v1/conflict_deletion_summary_v1.csv",
+      "already exists"
+    ]
+  ],
+  "requires_review": []
+}

@@ -1,0 +1,23 @@
+{
+  "analysis": "final_test_primary_v1",
+  "status": "confirmatory locked TEST evaluation",
+  "test_ground_truth_opened": true,
+  "test_used_for_training": false,
+  "test_used_for_model_selection": false,
+  "test_used_for_calibration": false,
+  "test_used_for_conflict_selection": false,
+  "test_used_for_threshold_optimization": false,
+  "test_used_for_arbitration_fitting": false,
+  "fit_population": "CAL only",
+  "evaluation_population": "4,731 structure-eligible frozen Graph-V2 TEST proteins",
+  "primary_conflict": "Bernoulli Jensen-Shannon divergence with natural logarithm",
+  "primary_reliability_comparison": "MB versus MA for structure failure",
+  "primary_reliability_metric": "average precision",
+  "primary_arbitration_comparison": "A2 conflict gate versus A1 uncertainty-only gate",
+  "bootstrap": "not performed in this script; fixed TEST predictions saved for pre-registered conditional whole-protein bootstrap",
+  "test_labels_sha256": "6c34b2b8ff996e3752ed575af4e604d775d711961642acc8b6c8067854682126",
+  "paired_ids_sha256": "f30654de5cee02f547db48e679f4711436edfbccc3f4ad4e22f6fc4153350704",
+  "sequence_probabilities_sha256": "d53e2d47fc505fe2492e2ad43b25079850b308e70e6bf0ecfb6a0ecbc4dcceff",
+  "structure_probabilities_sha256": "f1f40070d842f6dd2c90b2f5cc7c150d889575410646cc3d761c82091266822f",
+  "results_sha256": "75adcefe66bfa842a1cec966901745bd60c8019f79516e8ecbf9cbf9ced220f6"
+}

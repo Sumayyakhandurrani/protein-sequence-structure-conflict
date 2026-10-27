@@ -1,0 +1,17 @@
+E10 FUNCTIONAL-SITE EXTRACTION
+========================================
+Batch files: 48
+
+Total retained features: 18108
+ACT_SITE features: 1774
+BINDING features: 16334
+
+Proteins with any retained feature: 2451
+Proteins with ACT_SITE: 1153
+Proteins with BINDING: 2150
+
+Coordinate-valid features: 18108
+Coordinate-invalid/ambiguous features: 0
+
+Output:
+data/xai/functional_sites_v1/functional_sites_raw.csv

@@ -1,0 +1,35 @@
+E10 CONFLICT-DELETION AGGREGATION V1
+========================================
+
+STATUS: COMPLETE
+
+Proteins: 2447
+Protein-label targets: 23087
+
+Frozen production manifest SHA256:
+47df91321507008bbec4957c73e082deb8d04278b27a590169dff101cf784416
+
+Aggregation protocol SHA256:
+b96a20097f80fe7dafbee2d66cf482b3994e35ff349a96945d6ca4c283b795d9
+
+Aggregation implementation SHA256:
+455569e88351fadbf775f2f4bb3ae47899f274f47e100d50926c0f32ba8b3d22
+
+Bootstrap unit: protein
+Bootstrap replicates: 1000
+Bootstrap seed: 42
+CI: percentile 2.5%, 97.5%
+
+Validation:
+- frozen manifest verified
+- every NPZ SHA verified
+- protein count verified
+- target count verified
+- unique protein IDs verified
+- unique protein-label targets verified
+- finite scientific values verified
+- enrichment algebra verified
+- protein-level equal weighting verified
+- bootstrap replicate count verified
+
+No frozen production NPZ was modified.

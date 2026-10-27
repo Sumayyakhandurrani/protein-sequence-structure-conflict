@@ -1,0 +1,502 @@
+FIGURE 1 — STUDY DESIGN AND ANALYSIS FRAMEWORK
+==============================================
+
+PURPOSE
+-------
+Provide a single visual overview of the complete study.
+
+This is a conceptual workflow figure.
+It contains no inferential result and no performance comparison.
+
+
+TITLE
+-----
+Sequence–structure disagreement as a reliability signal for
+protein molecular-function prediction
+
+
+============================================================
+PANEL A — DATA AND BENCHMARK
+============================================================
+
+INPUT 1
+-------
+Reviewed UniProtKB/Swiss-Prot proteins
+
+Primary annotations:
+experimental GO Molecular Function annotations
+
+Primary experimental evidence codes:
+EXP
+IDA
+IPI
+IMP
+IGI
+IEP
+
+
+INPUT 2
+-------
+Protein structural evidence
+
+Sources:
+experimentally available structures and/or AlphaFold-derived structures
+according to the frozen structure-processing pipeline.
+
+
+TARGET CONSTRUCTION
+-------------------
+GO Molecular Function annotations
+
+Child-to-parent GO propagation
+
+GO:0003674 molecular-function root removed
+
+TRAIN-only label vocabulary
+
+Frozen primary vocabulary:
+494 GO-MF labels
+
+Minimum TRAIN support:
+75 proteins
+
+
+BENCHMARK
+---------
+Graph-V2 leakage-controlled benchmark
+
+TRAIN:
+38,031 proteins
+
+VAL:
+4,754 proteins
+
+TEST:
+4,754 proteins
+
+Paired final TEST:
+4,731 proteins
+
+
+SPLIT CONCEPT
+-------------
+Protein similarity graph
+
+Connected components assigned wholly to partitions
+
+Primary homology criterion used during graph construction/audit:
+>=30% sequence identity
+and
+>=80% bidirectional coverage
+
+Visual wording must avoid claiming mathematically guaranteed zero
+cross-split homology.
+
+
+============================================================
+PANEL B — INDEPENDENT SEQUENCE EXPERT
+============================================================
+
+INPUT
+-----
+Protein amino-acid sequence
+
+
+REPRESENTATION
+--------------
+Frozen ESM-2
+
+Model:
+facebook/esm2_t12_35M_UR50D
+
+Hidden dimension:
+480
+
+Maximum chunk:
+1,000 residues
+
+Protein representation:
+length-weighted mean of residue representations
+
+
+PREDICTOR
+---------
+MLP
+
+480 -> 512 -> 494
+
+LayerNorm
+GELU
+Dropout
+
+
+OUTPUT
+------
+494 sequence-expert probabilities
+
+Notation:
+p_seq
+
+
+CALIBRATION
+-----------
+Independent global temperature scaling
+
+T_seq =
+1.106977105140686
+
+
+VISUAL REQUIREMENT
+------------------
+Clearly show that ESM-2 is frozen and that the MLP is the downstream
+GO-MF predictor.
+
+
+============================================================
+PANEL C — INDEPENDENT STRUCTURE EXPERT
+============================================================
+
+INPUT
+-----
+Protein residue graph
+
+
+NODE FEATURES
+-------------
+21-dimensional residue-identity encoding
+
+
+STRUCTURAL INFORMATION
+----------------------
+C-alpha geometry
+
+Spatial edges:
+<=10 Angstrom
+
+Sequential edges
+
+Edge information includes:
+distance
+sequential indicator
+absolute sequence separation
+
+
+MODEL
+-----
+Geometric / structure-derived GNN
+
+Hidden dimension:
+128
+
+Layers:
+2
+
+Global mean pooling
+
+494 outputs
+
+
+OUTPUT
+------
+494 structure-expert probabilities
+
+Notation:
+p_struct
+
+
+CALIBRATION
+-----------
+Independent calibration assessment
+
+Fitted T_struct =
+1.0261014699935913
+
+Fitted temperature rejected because held-out calibration worsened.
+Deployed T_struct = 1.0 (unscaled)
+
+
+IMPORTANT VISUAL WORDING
+------------------------
+Call this branch:
+
+"structure-derived / geometric expert"
+
+Do NOT call it:
+
+"sequence-independent structure expert"
+
+because residue identity is included in node features.
+
+pLDDT is metadata/QC and is not an input to the primary structure model.
+
+
+============================================================
+PANEL D — UNCERTAINTY AND CONFLICT
+============================================================
+
+For every protein × GO-MF label:
+
+sequence probability:
+p_seq
+
+structure probability:
+p_struct
+
+
+EXPERT UNCERTAINTY
+------------------
+U(p) = 1 - 2|p - 0.5|
+
+
+PRIMARY CONFLICT
+----------------
+Bernoulli Jensen-Shannon divergence
+
+JS(
+    Bernoulli(p_seq),
+    Bernoulli(p_struct)
+)
+
+Natural logarithm.
+
+
+VISUAL CONCEPT
+--------------
+Show two probability outputs converging into:
+
+[Expert uncertainty]
++
+[Sequence–structure conflict]
+
+
+============================================================
+PANEL E — CENTRAL RELIABILITY QUESTION
+============================================================
+
+Large central question box:
+
+"Does sequence–structure disagreement provide information about
+prediction failure beyond expert uncertainty alone?"
+
+
+PRIMARY RELIABILITY COMPARISON
+------------------------------
+
+MA:
+expert uncertainty features
+
+versus
+
+MB:
+expert uncertainty features
++
+sequence–structure conflict
+
+
+PRIMARY EMPHASIS
+----------------
+Structure-expert failure reliability.
+
+Sequence-expert reliability is also evaluated as an asymmetric control.
+
+
+============================================================
+PANEL F — VALIDATION FRAMEWORK
+============================================================
+
+From the central reliability question, branch into the following
+analysis groups.
+
+
+1. CORE EVALUATION
+------------------
+Reliability
+
+Conflict-aware arbitration
+
+High-confidence conflict
+
+
+2. GENERALIZATION / ROBUSTNESS
+------------------------------
+Low-homology strata
+
+Structural degradation
+
+Sequence degradation
+
+GO-MF frequency strata
+
+
+3. MECHANISTIC / NEGATIVE CONTROLS
+----------------------------------
+M0 / MA / MB reliability ablation
+
+Randomized-conflict control
+
+
+4. BIOLOGICAL / EXPLANATION VALIDATION
+--------------------------------------
+Functional-site enrichment
+
+Rank localization
+
+Deletion faithfulness
+
+Conflict-focused XAI
+
+Conflict-driver deletion
+
+Explanation stability
+
+
+5. SENSITIVITY / EFFICIENCY
+---------------------------
+Alternative GCN structure backbone
+
+Runtime
+GPU memory
+parameter counts
+
+
+============================================================
+CONFIRMATORY-STATUS VISUAL NOTE
+============================================================
+
+The figure should visually distinguish:
+
+FROZEN / CONFIRMATORY CORE
+
+from
+
+POST-CONFIRMATORY ROBUSTNESS / XAI
+
+without making the diagram cluttered.
+
+Recommended approach:
+
+small footer or legend:
+
+"Core models and primary TEST analyses were frozen before TEST
+evaluation; designated robustness and explainability analyses were
+performed post-confirmatory."
+
+
+============================================================
+VISUAL LAYOUT
+============================================================
+
+Preferred orientation:
+landscape
+
+Left:
+data / benchmark
+
+Center-left:
+two parallel expert branches
+
+Center:
+probabilities → uncertainty + conflict
+
+Center-right:
+central reliability question
+
+Right:
+validation-analysis groups
+
+
+Approximate flow:
+
+DATA
+ |
+ v
+BENCHMARK
+ |
+ +-----------------------+
+ |                       |
+ v                       v
+SEQUENCE               STRUCTURE
+EXPERT                 EXPERT
+ |                       |
+ p_seq                 p_struct
+ |                       |
+ +-----------+-----------+
+             |
+             v
+     UNCERTAINTY + CONFLICT
+             |
+             v
+      RELIABILITY QUESTION
+             |
+   +---------+---------+---------+---------+
+   |         |         |         |         |
+   v         v         v         v         v
+ CORE    ROBUSTNESS  CONTROL    XAI    SENSITIVITY
+
+
+============================================================
+STYLE REQUIREMENTS
+============================================================
+
+1. Publication-style scientific schematic.
+
+2. Minimal decorative graphics.
+
+3. No protein cartoon implying experimentally determined structure for
+   every protein.
+
+4. Clearly separate sequence and structure branches.
+
+5. Avoid implying that structure is independent of amino-acid identity.
+
+6. Avoid causal arrows from conflict to biological failure.
+   Arrows indicate computational flow, not biological causality.
+
+7. Use consistent notation:
+   p_seq
+   p_struct
+   U
+   JS
+
+8. Keep all labels readable at journal-column scaling.
+
+9. Do not include performance numbers; those begin in Figure 2.
+
+10. Caption must define the post-confirmatory-status distinction.
+
+
+============================================================
+CAPTION CONTENT REQUIREMENTS
+============================================================
+
+Caption should state that:
+
+- reviewed proteins with experimental GO-MF annotations were used;
+- a leakage-controlled Graph-V2 benchmark was constructed;
+- sequence and structure-derived experts were developed independently;
+- calibration was independently assessed for both experts; the sequence temperature adjustment was retained, whereas the fitted structure temperature was rejected;
+- sequence–structure conflict was quantified per protein-label pair;
+- the central analysis asks whether conflict adds reliability
+  information beyond expert uncertainty;
+- subsequent analyses examine arbitration, homology, perturbation,
+  GO-frequency, biological explanation, negative controls, and
+  backbone sensitivity;
+- designated robustness/XAI analyses were post-confirmatory.
+
+
+============================================================
+SOURCE OF TRUTH
+============================================================
+
+E1-E12 frozen experiment ledger
+
+MASTER_EVIDENCE_MAP_V1.txt
+
+HEADLINE_RESULTS_V1.txt
+
+FIGURE_TABLE_PLAN_V1.txt
+
+
+STATUS
+======
+FIGURE 1 SCIENTIFIC CONTENT SPECIFICATION V1

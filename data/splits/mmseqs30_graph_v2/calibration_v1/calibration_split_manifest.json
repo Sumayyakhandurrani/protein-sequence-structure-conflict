@@ -1,0 +1,19 @@
+{
+  "name": "graph_v2_validation_calibration_v1",
+  "parent_benchmark": "mmseqs30_graph_v2",
+  "purpose": "post-hoc probability calibration development",
+  "seed": 42,
+  "target_calibration_fraction": 0.5,
+  "assignment_unit": "Graph-v2 connected component",
+  "assignment_algorithm": "largest-first greedy balancing with seeded random tie ordering",
+  "original_validation_proteins": 4754,
+  "original_validation_components": 1972,
+  "calibration_proteins": 2377,
+  "calibration_eval_proteins": 2377,
+  "calibration_components": 983,
+  "calibration_eval_components": 989,
+  "cross_subset_components": 0,
+  "train_modified": false,
+  "test_modified": false,
+  "test_used": false
+}

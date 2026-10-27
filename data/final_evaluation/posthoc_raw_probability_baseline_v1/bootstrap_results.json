@@ -1,0 +1,24 @@
+{
+  "classification": "post_hoc_supporting",
+  "comparison": "MD_minus_MC",
+  "n_bootstrap": 1000,
+  "seed": 42,
+  "resampling_unit": "whole_protein",
+  "models_refitted": false,
+  "average_precision": {
+    "observed_delta": 0.04280800713423527,
+    "ci_95_percentile": [
+      0.03623144405205833,
+      0.049504872169057204
+    ],
+    "fraction_bootstrap_positive": 1.0
+  },
+  "roc_auc": {
+    "observed_delta": 0.06660050579324228,
+    "ci_95_percentile": [
+      0.06096056020422347,
+      0.0726509571843004
+    ],
+    "fraction_bootstrap_positive": 1.0
+  }
+}

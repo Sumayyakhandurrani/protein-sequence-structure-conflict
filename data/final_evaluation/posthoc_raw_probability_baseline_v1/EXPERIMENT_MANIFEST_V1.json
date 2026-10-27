@@ -1,0 +1,100 @@
+{
+  "experiment": "posthoc_raw_probability_baseline_v1",
+  "classification": "post_hoc_supporting",
+  "primary_analysis_modified": false,
+  "experts_retrained": false,
+  "cal_proteins": 2369,
+  "paired_test_proteins": 4731,
+  "go_mf_labels": 494,
+  "models": {
+    "MC": [
+      "p_structure",
+      "p_sequence"
+    ],
+    "MD": [
+      "p_structure",
+      "p_sequence",
+      "bernoulli_js"
+    ]
+  },
+  "bootstrap": {
+    "replicates": 1000,
+    "seed": 42,
+    "unit": "whole_protein",
+    "method": "percentile_95"
+  },
+  "results": {
+    "analysis_classification": "post_hoc_supporting",
+    "test_used_for_model_fitting": false,
+    "test_used_for_feature_selection": false,
+    "cal_proteins": 2369,
+    "paired_test_proteins": 4731,
+    "labels": 494,
+    "endpoint": "abs(p_structure-y)>=0.5",
+    "models": {
+      "MA": {
+        "average_precision": 0.33168476214437315,
+        "roc_auc": 0.9556314673724361,
+        "n_features": 2,
+        "n_iter": 13,
+        "converged_before_limit": true
+      },
+      "MB": {
+        "average_precision": 0.4432987897763585,
+        "roc_auc": 0.9578329268139559,
+        "n_features": 3,
+        "n_iter": 17,
+        "converged_before_limit": true
+      },
+      "MC": {
+        "average_precision": 0.4024362713139442,
+        "roc_auc": 0.8862247969144044,
+        "n_features": 2,
+        "n_iter": 15,
+        "converged_before_limit": true
+      },
+      "MD": {
+        "average_precision": 0.4452442784481795,
+        "roc_auc": 0.9528253027076466,
+        "n_features": 3,
+        "n_iter": 20,
+        "converged_before_limit": true
+      }
+    },
+    "delta_ap_MB_minus_MA": 0.11161402763198536,
+    "delta_ap_MD_minus_MC": 0.04280800713423527,
+    "source_script_sha256": "c65f0a818c096aac766c34c7ab69856185b27568d504c7dc0e8b91a93b6571fa"
+  },
+  "bootstrap_results": {
+    "classification": "post_hoc_supporting",
+    "comparison": "MD_minus_MC",
+    "n_bootstrap": 1000,
+    "seed": 42,
+    "resampling_unit": "whole_protein",
+    "models_refitted": false,
+    "average_precision": {
+      "observed_delta": 0.04280800713423527,
+      "ci_95_percentile": [
+        0.03623144405205833,
+        0.049504872169057204
+      ],
+      "fraction_bootstrap_positive": 1.0
+    },
+    "roc_auc": {
+      "observed_delta": 0.06660050579324228,
+      "ci_95_percentile": [
+        0.06096056020422347,
+        0.0726509571843004
+      ],
+      "fraction_bootstrap_positive": 1.0
+    }
+  },
+  "artifact_sha256": {
+    "src/analysis/posthoc_raw_probability_baseline_v1.py": "c65f0a818c096aac766c34c7ab69856185b27568d504c7dc0e8b91a93b6571fa",
+    "src/analysis/bootstrap_posthoc_raw_probability_v1.py": "6a5d822de8117e2049f2767d2325fbd97a7c846384f5a105d5da6abd08f1e961",
+    "data/final_evaluation/posthoc_raw_probability_baseline_v1/results.json": "24a83d8101cc8c780bd3564ed48c44181f33210c12dc1c620897f9be157a63ac",
+    "data/final_evaluation/posthoc_raw_probability_baseline_v1/bootstrap_results.json": "462af1a2cf2b15665bff74a0664a35ede912a65a87645ca8e4cfa49d94acf1c1",
+    "data/final_evaluation/posthoc_raw_probability_baseline_v1/test_reliability_predictions.npz": "d0d8490fb474ae3140da4c4c909d82858702c45ca01e22f4118f8aa7e07c0a00",
+    "data/final_evaluation/posthoc_raw_probability_baseline_v1/bootstrap_deltas.npy": "f74d6b561322a402f1b625e419e69177bf1e3747489d73e015218e2ae846dd72"
+  }
+}

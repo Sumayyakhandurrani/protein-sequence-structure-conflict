@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software or its evaluation resources, please cite this repository."
+type: software
+title: "Sequence–Structure Evidence Conflict as a Reliability Signal for Protein Function Prediction"
+authors:
+  - family-names: Khan
+    given-names: Sumayya
+license: MIT
+abstract: >-
+  Research software and frozen evaluation resources for investigating
+  sequence–structure prediction disagreement as a reliability signal
+  in Gene Ontology molecular function prediction.

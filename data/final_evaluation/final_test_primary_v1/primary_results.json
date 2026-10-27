@@ -1,0 +1,150 @@
+{
+  "population": {
+    "frozen_test_total": 4754,
+    "paired_structure_eligible": 4731,
+    "structure_ineligible": 23,
+    "labels": 494,
+    "positive_annotations": 37871
+  },
+  "expert_performance": {
+    "sequence": {
+      "micro_ap": 0.5798783608681257,
+      "macro_ap_supported_labels": 0.4069817933175604,
+      "mae": 0.019031827714482936,
+      "brier": 0.009687409997145286,
+      "nll": 0.038819156104654716,
+      "supported_labels": 484,
+      "zero_positive_labels": 10
+    },
+    "structure": {
+      "micro_ap": 0.34401366690498897,
+      "macro_ap_supported_labels": 0.1424967629937431,
+      "mae": 0.023624507707951176,
+      "brier": 0.012722627247165984,
+      "nll": 0.05275465721263814,
+      "supported_labels": 484,
+      "zero_positive_labels": 10
+    },
+    "simple_average": {
+      "micro_ap": 0.5481138104348172,
+      "macro_ap_supported_labels": 0.3743879169246522,
+      "mae": 0.021328167711217056,
+      "brier": 0.010196060438292168,
+      "nll": 0.04051278909863461,
+      "supported_labels": 484,
+      "zero_positive_labels": 10
+    }
+  },
+  "primary_reliability": {
+    "endpoint": "structure failure: |p_structure-y| >= 0.5",
+    "conflict": "Bernoulli Jensen-Shannon divergence, natural log",
+    "failure_prevalence": 0.015021090113704338,
+    "MA_binary": {
+      "roc_auc": 0.9556314673724361,
+      "average_precision": 0.33168476214437315,
+      "log_loss": 0.05229499017070198,
+      "brier": 0.012530498814544088
+    },
+    "MB_binary": {
+      "roc_auc": 0.9578329268139559,
+      "average_precision": 0.4432987897763585,
+      "log_loss": 0.045417195565033194,
+      "brier": 0.010545310071214498
+    },
+    "MB_minus_MA_binary": {
+      "roc_auc": 0.0022014594415198374,
+      "average_precision": 0.11161402763198536,
+      "log_loss": -0.0068777946056687855,
+      "brier": -0.0019851887433295894
+    },
+    "MA_continuous": {
+      "mae": 0.017149282678273387,
+      "rmse": 0.08692404106901884,
+      "correlation": 0.6156582109326231
+    },
+    "MB_continuous": {
+      "mae": 0.015188064245523814,
+      "rmse": 0.08172393576734188,
+      "correlation": 0.6715738809497076
+    },
+    "MB_minus_MA_continuous": {
+      "mae": -0.001961218432749573,
+      "rmse": -0.005200105301676958,
+      "correlation": 0.05591567001708453
+    },
+    "MA_binary_coefficients": [
+      3.9437646413967262,
+      5.232637044383831
+    ],
+    "MB_binary_coefficients": [
+      3.104462281032243,
+      4.59892516573744,
+      13.562160324461967
+    ],
+    "MA_continuous_coefficients": [
+      0.46463447532125995,
+      0.3741862577537663
+    ],
+    "MB_continuous_coefficients": [
+      0.35817378856825,
+      0.3038616804060021,
+      1.4071671031215232
+    ]
+  },
+  "arbitration_v1": {
+    "results": {
+      "A0_sequence": {
+        "micro_ap": 0.5798783608681257,
+        "macro_ap_supported_labels": 0.4069817933175604,
+        "mae": 0.019031827714482936,
+        "brier": 0.009687409997145286,
+        "nll": 0.038819156104654716,
+        "supported_labels": 484,
+        "zero_positive_labels": 10
+      },
+      "A1_uncertainty_gate": {
+        "micro_ap": 0.5063459306737405,
+        "macro_ap_supported_labels": 0.3016896207119032,
+        "mae": 0.01774790632917543,
+        "brier": 0.011030705522308348,
+        "nll": 0.045110361305730415,
+        "supported_labels": 484,
+        "zero_positive_labels": 10
+      },
+      "A2_conflict_gate": {
+        "micro_ap": 0.5411302251268089,
+        "macro_ap_supported_labels": 0.3471161536504239,
+        "mae": 0.017082191605100373,
+        "brier": 0.010429672481576809,
+        "nll": 0.0427908282132207,
+        "supported_labels": 484,
+        "zero_positive_labels": 10
+      }
+    },
+    "A2_minus_A1": {
+      "micro_ap": 0.03478429445306841,
+      "macro_ap_supported_labels": 0.045426532938520725,
+      "mae": -0.0006657147240750581,
+      "brier": -0.0006010330407315388,
+      "nll": -0.002319533092509714
+    },
+    "A2_minus_A0": {
+      "micro_ap": -0.03874813574131686,
+      "macro_ap_supported_labels": -0.05986563966713648,
+      "mae": -0.0019496361093825632,
+      "brier": 0.0007422624844315232,
+      "nll": 0.003971672108565985
+    },
+    "A1_coefficients": [
+      20.42143047211018,
+      -23.080561853274244
+    ],
+    "A2_coefficients": [
+      26.737401289215434,
+      -27.726353119736082,
+      -67.6809375140937
+    ],
+    "oracle_mae_diagnostic_only": 0.013703036537159657,
+    "oracle_headroom_realized_by_A2": 0.36586836385693966
+  }
+}

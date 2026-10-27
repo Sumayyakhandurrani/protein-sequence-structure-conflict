@@ -1,0 +1,328 @@
+EXPLANATION STABILITY PROTOCOL V1
+=================================
+
+STATUS
+------
+FROZEN BEFORE EXPLANATION-STABILITY OUTCOMES ARE GENERATED.
+
+This is a post-confirmatory biological/XAI validation analysis.
+It does not modify FINAL_TEST_PROTOCOL_V1 or any previously frozen result.
+
+
+PURPOSE
+-------
+Test whether residue-level explanations from the frozen sequence and
+structure experts remain similar after a small model perturbation that
+preserves the relevant target prediction.
+
+This operationalizes the proposal question:
+
+    Are explanations stable under small, prediction-preserving
+    perturbations?
+
+
+FROZEN POPULATION
+-----------------
+Population file:
+
+    data/xai/functional_sites_v1/explanation_stability_v1/
+    stability_population_ids.txt
+
+Population size:
+
+    200 proteins
+
+Population selection:
+
+    deterministic random sample without replacement from the complete
+    frozen 2447-protein XAI attribution population
+
+Random seed:
+
+    42
+
+Population-file SHA256:
+
+    b0fbf944af605d61c3fb501709a9e7aa55b188b30cae2e354cd541dc37476877
+
+The population must not be changed after stability outcomes are observed.
+
+
+TARGET LABELS
+-------------
+For every selected protein, use all frozen true-positive GO-MF target
+labels already stored in the existing attribution NPZ.
+
+Expected total protein-label targets:
+
+    1770
+
+No target may be selected or discarded based on its attribution pattern,
+conflict value, stability result, GO identity, or model performance.
+
+
+REFERENCE EXPLANATIONS
+----------------------
+Use the existing frozen residue-level signed attribution-logit-drop
+vectors from:
+
+    sequence_attributions_v1/per_protein/
+
+and:
+
+    structure_attributions_v1/per_protein/
+
+No reference attribution may be recomputed or modified.
+
+
+SMALL PERTURBATION
+------------------
+Exactly one residue position is perturbed at a time.
+
+Sequence expert:
+
+    replace the selected original residue by the native ESM-2 <mask>
+    token using the frozen ESM2-sequence-v1 pipeline.
+
+Structure expert:
+
+    zero the selected residue's 21-dimensional node-identity feature.
+
+For the structure expert:
+
+    coordinates remain unchanged
+    graph topology remains unchanged
+    geometric edge attributes remain unchanged
+    pLDDT remains metadata only
+
+These are model perturbations, not physical biological mutations.
+
+
+DETERMINISTIC CANDIDATE ORDER
+-----------------------------
+For each protein and modality, construct a deterministic pseudorandom
+ordering of all residue positions.
+
+The ordering must depend only on:
+
+    global seed = 42
+    UniProt ID
+    modality
+
+It must not depend on:
+
+    attribution magnitude
+    conflict
+    GO label
+    prediction error
+    functional-site annotation
+    stability outcome
+
+Candidate positions are tested in this fixed order.
+
+
+PREDICTION-PRESERVING CRITERION
+-------------------------------
+Prediction preservation is evaluated separately for each
+protein-label target and modality.
+
+Let:
+
+    p_clean = calibrated probability for the target on the clean input
+
+    p_perturbed = calibrated probability for the target after the
+                  one-residue perturbation
+
+A candidate residue is prediction-preserving when:
+
+    abs(p_perturbed - p_clean) <= 0.01
+
+No 0.5 classification-threshold condition is imposed.
+
+For each protein-label target, use the FIRST residue in the frozen
+candidate order satisfying this criterion.
+
+Do not search for the residue producing the highest explanation
+stability.
+
+If no residue satisfies the criterion after all positions have been
+tested, that protein-label target is stability-ineligible for that
+modality and must be reported as such.
+
+Sequence and structure eligibility are evaluated separately.
+
+
+PERTURBED EXPLANATION
+---------------------
+After the first prediction-preserving residue has been selected for a
+protein-label target, recompute that target's complete residue-level
+explanation on the perturbed input using the same frozen attribution
+method used for the reference explanation.
+
+Sequence:
+
+    residue masking attribution using the frozen sequence expert,
+    frozen ESM-2 revision, frozen MLP, and frozen temperature.
+
+Structure:
+
+    residue node-identity-zeroing attribution using the frozen
+    structure expert.
+
+No model retraining, recalibration, attribution-method change, or
+hyperparameter tuning is permitted.
+
+
+COMPARISON POSITIONS
+--------------------
+When comparing the clean and perturbed explanation vectors, exclude the
+single residue position used to create the prediction-preserving base
+perturbation.
+
+This prevents the deliberately perturbed position from creating a
+trivial self-comparison artifact.
+
+All remaining residue positions are retained.
+
+
+PRIMARY STABILITY METRIC
+------------------------
+Primary metric:
+
+    Spearman rank correlation
+
+between the clean and perturbed signed residue-attribution vectors for
+the same protein-label target.
+
+The metric evaluates preservation of residue importance ordering rather
+than equality of raw attribution magnitude.
+
+Degenerate cases in which Spearman correlation is mathematically
+undefined must be retained and reported as undefined; they must not be
+silently converted to zero or one.
+
+
+SECONDARY STABILITY METRIC
+--------------------------
+Secondary metric:
+
+    top-10-percent Jaccard overlap
+
+For each explanation vector after exclusion of the base perturbation
+position:
+
+    k = max(1, ceil(0.10 * number_of_comparison_positions))
+
+Rank residues by descending signed attribution.
+
+Ties are broken by lower original residue position.
+
+Take the top-k residue sets from the clean and perturbed explanations.
+
+Jaccard:
+
+    |intersection| / |union|
+
+
+AGGREGATION
+-----------
+First compute stability separately for every eligible protein-label
+target.
+
+Then, separately for each modality:
+
+1. Average eligible target-level values within each protein.
+2. Give each eligible protein equal weight.
+3. Report population-level summaries across proteins.
+
+This prevents proteins with many positive GO-MF labels from dominating
+the population result.
+
+
+PRIMARY REPORTING
+-----------------
+Report separately for sequence and structure:
+
+    frozen proteins attempted
+    protein-label targets attempted
+    eligible protein-label targets
+    eligibility fraction
+    proteins with at least one eligible target
+
+For Spearman:
+
+    mean protein-level stability
+    median protein-level stability
+    95 percent whole-protein bootstrap CI for the mean
+
+For top-10-percent Jaccard:
+
+    mean protein-level stability
+    median protein-level stability
+    95 percent whole-protein bootstrap CI for the mean
+
+
+BOOTSTRAP
+---------
+Use:
+
+    1000 whole-protein bootstrap resamples
+    base seed = 42
+
+Bootstrap complete protein-level aggregates, not individual
+protein-label rows.
+
+
+INTERPRETATION
+--------------
+Higher Spearman correlation indicates greater preservation of residue
+importance ranking after a small prediction-preserving model
+perturbation.
+
+Higher top-10-percent Jaccard indicates greater preservation of the most
+highly attributed residue set.
+
+This experiment measures local explanation stability under the specified
+model perturbations.
+
+It does NOT establish:
+
+    biological causality
+    physical mutational robustness
+    evolutionary conservation
+    expert correctness
+    modality independence
+    explanation truth
+
+Sequence masking and structure node-identity zeroing are synthetic model
+perturbations.
+
+
+NO OUTCOME-DEPENDENT CHANGES
+----------------------------
+After stability outcomes are observed, do not change:
+
+    200-protein population
+    true-positive target-label definition
+    perturbation size
+    perturbation mechanism
+    candidate-order rule
+    random seed
+    prediction-preserving tolerance
+    first-qualifying-residue rule
+    comparison-position exclusion
+    primary Spearman metric
+    secondary top-10-percent Jaccard metric
+    aggregation hierarchy
+    bootstrap procedure
+
+Negative, weak, null, asymmetric, or partially ineligible results must
+be retained and reported.
+
+
+COMPUTATIONAL STATUS
+--------------------
+Freezing this protocol does not itself generate stability outcomes.
+
+Implementation must be validated with a small smoke test before the
+full 200-protein production run.

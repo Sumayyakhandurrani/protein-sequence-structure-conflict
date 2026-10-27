@@ -1,0 +1,34 @@
+{
+  "n_labels": 494,
+  "label_policy": {
+    "type": "GO Molecular Function",
+    "selection_basis": "training support only",
+    "minimum_train_support": 75
+  },
+  "matrix_shapes": {
+    "train": [
+      38031,
+      494
+    ],
+    "val": [
+      4754,
+      494
+    ],
+    "test": [
+      4754,
+      494
+    ]
+  },
+  "dtype": "uint8",
+  "checksums": {
+    "vocabulary_csv": "a2b8278b49d58917852f8899fe2d630ba272f91e0fbd92a68bfb609b2ea13bbe",
+    "train_labels_npy": "eda8345b19eed9226c2eaefde9245ff7f2de926621e3c0db37c24c094bc9a6f2",
+    "val_labels_npy": "8c4caa95396a4c41f13a8ddb1fe33b7891f090711f2b79d4712b6a5d3dec1deb",
+    "test_labels_npy": "6c34b2b8ff996e3752ed575af4e604d775d711961642acc8b6c8067854682126",
+    "train_ids": "e61b72ff478669a982c53503f0a989780897b0dfaae25d2c1c03b87596ecec2c",
+    "val_ids": "510461f375fe99acc17c87a44f6c2aa184b952a631f357127c06b8414d22f5e8",
+    "test_ids": "b626be983cc009ea0c027dc3043e6020b3a7c9a1c010b91bae1829705ef34993",
+    "label_map": "a2b8278b49d58917852f8899fe2d630ba272f91e0fbd92a68bfb609b2ea13bbe"
+  },
+  "test_policy": "Test matrix is generated mechanically from the frozen benchmark, but must not be used for model selection, calibration, hyperparameter tuning, or threshold selection."
+}

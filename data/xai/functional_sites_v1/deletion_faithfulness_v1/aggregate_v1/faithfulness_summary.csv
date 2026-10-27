@@ -1,0 +1,3 @@
+modality,n_proteins,n_protein_label_targets,mean_protein_faithfulness_enrichment,median_protein_faithfulness_enrichment,fraction_proteins_positive,bootstrap_mean_ci95_low,bootstrap_mean_ci95_high,bootstrap_replicates,bootstrap_base_seed,bootstrap_stream_seed
+sequence,2447,23087,2.4033468562321896,2.2993445017121057,1.0,2.3640654617832046,2.442991092033483,1000,42,3000985917
+structure,2447,23087,2.864877653352747,2.744929850101471,1.0,2.8269380449821337,2.902948489281293,1000,42,1479439027

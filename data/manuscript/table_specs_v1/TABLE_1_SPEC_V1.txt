@@ -1,0 +1,73 @@
+TABLE 1 — BENCHMARK AND EXPERT PERFORMANCE
+==========================================
+
+PURPOSE
+Summarize the frozen benchmark and final TEST performance of the two
+independently developed experts and their simple probability average.
+
+BENCHMARK
+TRAIN proteins: 38,031
+VAL proteins: 4,754
+TEST proteins: 4,754
+GO-MF labels: 494
+Paired structure-eligible TEST proteins: 4,731
+Structure-ineligible TEST proteins: 23
+
+PRIMARY PERFORMANCE POPULATION
+All reported model-performance metrics in this table use the frozen paired
+structure-eligible TEST population (n=4,731) and the same 494 frozen GO-MF
+labels.
+
+Macro AUPRC is calculated over the 484 labels with at least one positive
+annotation in this paired TEST population; 10 labels have zero TEST positives.
+
+MODELS
+1. Sequence expert
+   - Frozen ESM-2 representation:
+     facebook/esm2_t12_35M_UR50D
+   - ESM-2 parameters: 33,500,401
+   - ESM-2 frozen, not fine-tuned
+   - Trainable MLP head parameters: 500,718
+   - Final TEST probabilities use global temperature scaling:
+     T = 1.106977105140686
+
+2. Structure expert
+   - Geometric residue-graph GNN
+   - Trainable parameters: 298,990
+   - No ESM-2 input
+   - pLDDT is not a model input
+   - Final TEST probabilities are uncalibrated:
+     T = 1.0; calibration_applied = false
+
+3. Simple probability average
+   - Arithmetic mean of sequence and structure probabilities
+   - No additional trainable parameters
+
+FINAL TEST METRICS
+Model               micro AUPRC   macro AUPRC   Fmax        Smin         Brier       NLL
+Sequence expert      0.579878361   0.406981793   0.591081    16.245787    0.009687410 0.038819156
+Structure expert     0.344013667   0.142496763   0.425794    22.195472    0.012722627 0.052754657
+Simple average       0.548113810   0.374387917   0.573488    16.963995    0.010196060 0.040512789
+
+REPORTING NOTES
+- AUPRC means average precision.
+- Fmax and Smin are reported from the frozen dedicated Fmax/Smin evaluation.
+- Thresholds used to identify Fmax/Smin are evaluation summaries and were not
+  used for model selection or final TEST optimization.
+- Distinguish the frozen ESM-2 representation-model parameter count from the
+  trainable sequence-head parameter count.
+- Do not imply that structure temperature scaling improved calibration.
+- Do not describe the structure expert as sequence-independent because
+  amino-acid identity is part of its node features.
+- Do not interpret the simple average as outperforming the sequence expert.
+
+AUTHORITATIVE SOURCES
+- data/manuscript/experiment_ledger_v1/E1_independent_experts.txt
+- data/final_evaluation/final_test_manifest.json
+- data/final_evaluation/final_test_primary_v1/primary_results.json
+- data/final_evaluation/sequence_expert_v1_test/metadata.json
+- data/final_evaluation/structure_expert_v1_test/metadata.json
+- data/evaluation/fmax_smin_v1/results/fmax_smin_summary.csv
+
+STATUS
+Specification frozen before manuscript Table 1 construction.

@@ -1,0 +1,42 @@
+{
+  "analysis_classification": "post_hoc_supporting",
+  "test_used_for_model_fitting": false,
+  "test_used_for_feature_selection": false,
+  "cal_proteins": 2369,
+  "paired_test_proteins": 4731,
+  "labels": 494,
+  "endpoint": "abs(p_structure-y)>=0.5",
+  "models": {
+    "MA": {
+      "average_precision": 0.33168476214437315,
+      "roc_auc": 0.9556314673724361,
+      "n_features": 2,
+      "n_iter": 13,
+      "converged_before_limit": true
+    },
+    "MB": {
+      "average_precision": 0.4432987897763585,
+      "roc_auc": 0.9578329268139559,
+      "n_features": 3,
+      "n_iter": 17,
+      "converged_before_limit": true
+    },
+    "MC": {
+      "average_precision": 0.4024362713139442,
+      "roc_auc": 0.8862247969144044,
+      "n_features": 2,
+      "n_iter": 15,
+      "converged_before_limit": true
+    },
+    "MD": {
+      "average_precision": 0.4452442784481795,
+      "roc_auc": 0.9528253027076466,
+      "n_features": 3,
+      "n_iter": 20,
+      "converged_before_limit": true
+    }
+  },
+  "delta_ap_MB_minus_MA": 0.11161402763198536,
+  "delta_ap_MD_minus_MC": 0.04280800713423527,
+  "source_script_sha256": "c65f0a818c096aac766c34c7ab69856185b27568d504c7dc0e8b91a93b6571fa"
+}

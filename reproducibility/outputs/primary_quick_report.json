@@ -1,0 +1,27 @@
+{
+  "mode": "quick",
+  "population": {
+    "proteins": 4731,
+    "go_mf_labels": 494
+  },
+  "primary_reliability": {
+    "MA_AP": 0.3316847321436551,
+    "MB_AP": 0.44329876402986684,
+    "delta_AP": 0.11161403188621172
+  },
+  "arbitration": {
+    "A0_micro_AP": 0.5798783608681257,
+    "A1_micro_AP": 0.5063459293664293,
+    "A2_micro_AP": 0.5411301470872464,
+    "A0_macro_AP": 0.4069817933175604,
+    "A1_macro_AP": 0.30168992799203626,
+    "A2_macro_AP": 0.34711565833830826,
+    "delta_micro_AP": 0.03478421772081708,
+    "delta_macro_AP": 0.04542573034627201
+  },
+  "checks": {
+    "primary_delta": true,
+    "arbitration_micro_delta": true,
+    "arbitration_macro_delta": true
+  }
+}

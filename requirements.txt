@@ -1,0 +1,26 @@
+# Protein sequence-structure conflict research
+# Current environment snapshot: 2026-10-14
+# NOT a verified historical training lockfile.
+# Python version at audit: 3.14.4
+#
+# Versions below were observed in the current environment.
+# PyTorch installation may require platform-specific CUDA wheels.
+
+torch==2.14.0
+transformers==5.17.0
+numpy==2.5.3
+pandas==3.0.5
+scipy==1.18.1
+scikit-learn==1.9.1
+networkx==3.6.1
+matplotlib==3.11.2
+tqdm==4.70.1
+
+# Additional source-code dependencies not installed at audit:
+# biopython  # Historical version unknown
+# obonet  # Historical version unknown
+# requests  # Historical version unknown
+# urllib3  # Historical version unknown
+
+# Do not assume this file reproduces all original experiments.
+# Preserve frozen data, checkpoints, predictions and TEST results.

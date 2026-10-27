@@ -1,0 +1,253 @@
+FIGURE 2 — CORE SEQUENCE–STRUCTURE CONFLICT EVIDENCE
+====================================================
+
+PURPOSE
+-------
+Present the central quantitative evidence that sequence–structure
+disagreement contains incremental structure-reliability information
+beyond expert uncertainty.
+
+All panels use frozen existing outputs.
+No models are refitted during figure generation.
+
+
+PANEL A — PRIMARY STRUCTURE-FAILURE RELIABILITY
+================================================
+
+Population:
+FINAL TEST
+
+Proteins:
+4,731
+
+Labels:
+494
+
+Endpoint:
+|p_structure - y| >= 0.5
+
+Conflict:
+Bernoulli Jensen-Shannon divergence, natural logarithm
+
+MA:
+structure + sequence uncertainty
+
+MB:
+MA + Bernoulli-JS conflict
+
+Average Precision:
+
+MA = 0.3316847621
+MB = 0.4432987898
+
+Delta:
++0.1116140319
+
+95% whole-protein bootstrap CI:
+[0.1018295207, 0.1215190014]
+
+Bootstrap replicates:
+1,000
+
+Recommended visual:
+two bars/points for MA and MB plus a clearly printed Delta AP and CI.
+
+Primary source:
+data/final_evaluation/final_test_primary_v1/primary_results.json
+
+CI source:
+data/final_evaluation/final_test_primary_v1/bootstrap/
+reliability_bootstrap_summary.csv
+
+
+PANEL B — RANDOMIZED-CONFLICT NEGATIVE CONTROL
+===============================================
+
+IMPORTANT:
+This is the earlier E11 ablation and uses ABSOLUTE probability
+disagreement rather than the later frozen Bernoulli-JS formulation.
+
+Structure-expert reliability AP:
+
+MA uncertainty-only:
+0.3270294285
+
+MB randomized conflict:
+0.3262401486
+
+MB correctly paired conflict:
+0.4078582581
+
+Real minus randomized:
++0.0816181095
+
+95% CI:
+[+0.0713045, +0.0926911]
+
+Recommended visual:
+three bars/points:
+Uncertainty only
++ shuffled conflict
++ paired conflict
+
+Caption must explicitly state:
+"Earlier absolute-disagreement ablation."
+
+Primary source:
+data/analysis/randomized_conflict_control_v1/
+randomized_conflict_summary.csv
+
+
+PANEL C — CONFLICT-AWARE ARBITRATION
+====================================
+
+Population:
+FINAL TEST
+
+Metric:
+micro AUPRC
+
+A0 sequence only:
+0.5798783609
+
+A1 uncertainty-only gate:
+0.5063459307
+
+A2 conflict-aware gate:
+0.5411302251
+
+A2 minus A1:
++0.0347842177
+
+95% whole-protein bootstrap CI:
+[0.0307822779, 0.0386037615]
+
+Important interpretation:
+A2 improves over A1.
+
+A2 does NOT outperform A0 sequence-only.
+
+Recommended visual:
+three bars/points for A0, A1, A2.
+
+Highlight A2-A1 with CI.
+
+Primary source:
+data/final_evaluation/final_test_primary_v1/primary_results.json
+
+CI source:
+data/final_evaluation/final_test_primary_v1/bootstrap/
+arbitration_bootstrap_summary.csv
+
+
+PANEL D — HIGH-CONFIDENCE CONFLICT
+==================================
+
+Population:
+FINAL TEST
+
+Definition:
+(p_sequence >= 0.80 and p_structure <= 0.20)
+OR
+(p_sequence <= 0.20 and p_structure >= 0.80)
+
+High-confidence conflict pairs:
+3,623
+
+Fraction of all paired protein-label pairs:
+0.155020%
+
+Direction:
+
+sequence YES / structure NO:
+3,318
+
+sequence NO / structure YES:
+305
+
+Closer to ground truth:
+
+sequence:
+0.832183
+= 83.2183%
+
+structure:
+0.167817
+= 16.7817%
+
+Mean Bernoulli-JS:
+0.414151
+
+Median Bernoulli-JS:
+0.407481
+
+Recommended visual:
+100% horizontal proportion bar for which expert is closer to truth.
+
+Add compact annotation:
+n = 3,623
+0.155% of paired TEST protein-label pairs
+
+Do NOT imply:
+- sequence is always correct;
+- structure is generally useless;
+- conflict itself is an error probability.
+
+Primary source:
+data/conflict/high_confidence_conflict_v1/final_test_results.json
+
+
+====================================================
+FIGURE-WIDE INTERPRETATION
+====================================================
+
+Panel A:
+Conflict provides substantial incremental information for predicting
+structure-expert failure beyond expert uncertainty.
+
+Panel B:
+Destroying protein-level correspondence removes the earlier
+absolute-disagreement reliability benefit.
+
+Panel C:
+Conflict improves arbitration relative to uncertainty-only gating,
+but does not beat the stronger sequence expert overall.
+
+Panel D:
+Strong opposing predictions form a small, distinct regime in which
+sequence is closer more often, while structure remains closer for a
+non-trivial minority.
+
+
+====================================================
+VISUAL RULES
+====================================================
+
+1. Publication-ready landscape multi-panel figure.
+
+2. Panels labeled:
+A, B, C, D.
+
+3. Do not use significance stars.
+
+4. Show effect sizes and bootstrap CIs where available.
+
+5. Panel B must be labeled as the earlier absolute-disagreement
+   ablation so it cannot be confused with Panel A's Bernoulli-JS model.
+
+6. Panel C must include A0 sequence-only so the figure does not imply
+   A2 is the best predictor overall.
+
+7. Panel D should show proportions, not causal/error-probability
+   language.
+
+8. Use consistent readable typography.
+
+9. Generate vector PDF/SVG plus high-resolution PNG.
+
+10. Figure-generation code must not alter frozen experimental outputs.
+
+
+STATUS
+======
+FIGURE 2 SCIENTIFIC SPECIFICATION V1
